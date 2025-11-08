@@ -1,0 +1,16 @@
+{
+    "builds": [
+      {
+        "src": "lifelink_frontend/package.json",
+        "use": "@vercel/static-build",
+        "config": { "distDir": "dist" }
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "lifelink_frontend/dist/index.html"
+      }
+    ]
+  }
+  
