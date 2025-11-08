@@ -5,6 +5,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000
 
 const API = axios.create({
   baseURL: API_BASE_URL, // Django REST API base URL
+  headers: { "Content-Type": "application/json" },
 });
 
 // Request interceptor to add auth token
@@ -33,9 +34,9 @@ API.interceptors.response.use(
       try {
         const refreshToken = localStorage.getItem('refresh_token');
         if (refreshToken) {
-          const response = await axios.post(`${API.defaults.baseURL}token/refresh/`, {
-            refresh: refreshToken
-          });
+          const refreshURL = new URL("token/refresh/", API.defaults.baseURL).toString();
+          const response = await axios.post(refreshURL, { refresh: refreshToken });
+
           
           const { access } = response.data;
           localStorage.setItem('access_token', access);

@@ -1,5 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect
 
-# Create your views here.
-def home(req):
-    return render(req,'home.html')
+def home(request):
+    return redirect("https://lifelink-sandy.vercel.app")
