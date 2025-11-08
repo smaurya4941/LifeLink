@@ -16,8 +16,8 @@ psycopg2-binary==2.9.10
 # === Channels (WebSocket Support) ===
 channels==4.0.0
 # comment next line if using InMemory layer on Render
-channels-redis==4.1.0
-redis==5.0.1
+# channels-redis==4.1.0
+# redis==5.0.1
 
 # === Machine Learning (Lightweight Integration) ===
 scikit-learn==1.7.2
@@ -25,13 +25,13 @@ pandas==2.2.3
 numpy==2.2.6
 joblib==1.5.2
 
-# === Face & QR (used in Smart Attendance/Matching logic) ===
-opencv-python-headless==4.12.0.88
-dlib==19.24.8
-face-recognition==1.3.0
-face-recognition-models==0.3.0
-qrcode==7.4.2
-pillow==10.4.0
+# # === Face & QR (used in Smart Attendance/Matching logic) ===
+# opencv-python-headless==4.12.0.88
+# dlib==19.24.8
+# face-recognition==1.3.0
+# face-recognition-models==0.3.0
+# qrcode==7.4.2
+# pillow==10.4.0
 
 # === Optional Utils ===
 requests==2.32.5
