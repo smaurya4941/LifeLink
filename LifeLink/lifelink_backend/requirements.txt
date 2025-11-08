@@ -36,3 +36,4 @@ joblib==1.5.2
 # === Optional Utils ===
 requests==2.32.5
 python-dateutil==2.9.0.post0
+pyotp==2.9.0
