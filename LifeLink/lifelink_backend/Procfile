@@ -1,1 +1,1 @@
-web: gunicorn lifelink_backend.wsgi
+web: gunicorn lifelink_backend.wsgi --bind 0.0.0.0:$PORT
