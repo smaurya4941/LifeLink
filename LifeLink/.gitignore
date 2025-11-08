@@ -1,0 +1,14 @@
+# Django stuff
+__pycache__/
+*.py[cod]
+db.sqlite3
+/staticfiles/
+/venv/
+.env
+
+# Node stuff
+/node_modules/
+/dist/
+
+# VS Code
+.vscode/
