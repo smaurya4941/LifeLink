@@ -2,8 +2,17 @@
 Enhanced security features for LifeLink including 2FA, rate limiting, and security monitoring
 """
 
-import pyotp
-import qrcode
+# optional imports — handle missing packages gracefully
+try:
+    import qrcode
+except Exception:
+    qrcode = None
+
+try:
+    import pyotp
+except Exception:
+    pyotp = None
+
 import io
 import base64
 from django.core.cache import cache
