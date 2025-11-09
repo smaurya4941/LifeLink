@@ -149,15 +149,9 @@ export const isAuthenticated = () => {
 
 // Password reset & forgot password API calls
 export const passwordAPI = {
-  // Send reset email (Forgot Password)
-  forgotPassword: (email) => {
-    return API.post("password-reset/", { email });
-  },
-
-  // Reset password using uid & token
-  resetPassword: ({ uid, token, new_password }) => {
-    return API.post("password-reset/confirm/", { uid, token, new_password });
-  },
+  forgotPassword: (email) => API.post("/password-reset/", { email }),
+  resetPassword: ({ uid, token, new_password }) =>
+    API.post("/password-reset/confirm/", { uid, token, new_password }),
 };
 
 // Analytics API calls
