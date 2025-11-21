@@ -34,7 +34,8 @@ API.interceptors.response.use(
       try {
         const refreshToken = localStorage.getItem('refresh_token');
         if (refreshToken) {
-          const refreshURL = new URL("token/refresh/", API.defaults.baseURL).toString();
+          // const refreshURL = new URL("token/refresh/", API.defaults.baseURL).toString();
+          const refreshURL = `${API_BASE_URL}token/refresh/`;
           const response = await axios.post(refreshURL, { refresh: refreshToken });
 
           
@@ -62,14 +63,16 @@ export const authAPI = {
   register: (userData) => API.post("register/", userData),
   login: (credentials) => API.post("login/", credentials),
   logout: (refreshToken) => API.post("logout/", { refresh: refreshToken }),
-  getProfile: () => {
-    const token = localStorage.getItem('access_token');
-    return API.get("profile/", {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    });
-  },
+  // getProfile: () => {
+  //   const token = localStorage.getItem('access_token');
+  //   return API.get("profile/", {
+  //     headers: {
+  //       Authorization: token ? `Bearer ${token}` : "",
+  //     },
+  //   });
+  // },
+  getProfile: () => API.get("profile/"),
+
   
   updateProfile: (userData) => API.patch("profile/", userData),
   getDashboard: () => API.get("dashboard/"),

@@ -10,6 +10,8 @@ from django.utils.encoding import force_str, force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import get_user_model
+from rest_framework.validators import UniqueValidator
+
 
 
 # User serializers
@@ -22,27 +24,23 @@ class UserSerializer(serializers.ModelSerializer):
                 'pincode', 'country', 'created_at']
 
 class UserRegisterSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(required=True, validators=[UniqueValidator(User.objects.all())])
     password = serializers.CharField(write_only=True, validators=[validate_password])
     password_confirm = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password', 'password_confirm', 
-                 'first_name', 'last_name', 'phone_number', 'date_of_birth', 
-                 'is_donor', 'is_recipient', 'latitude', 'longitude', 'address', 
-                 'city', 'traditional_state', 'pincode', 'country']
+        fields = ['username','email','password','password_confirm', 'is_donor','is_recipient']
 
     def validate(self, attrs):
-        if attrs['password'] != attrs['password_confirm']:
-            raise serializers.ValidationError("Passwords don't match")
+        if attrs.get('password') != attrs.get('password_confirm'):
+            raise serializers.ValidationError({'password_confirm': "Passwords don't match."})
         return attrs
 
     def create(self, validated_data):
-        validated_data.pop('password_confirm')
+        validated_data.pop('password_confirm', None)
         password = validated_data.pop('password')
-        user = User(**validated_data)
-        user.set_password(password)
-        user.save()
+        user = User.objects.create_user(password=password, **validated_data)
         return user
 
 # Donor serializers

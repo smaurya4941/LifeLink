@@ -37,6 +37,7 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
 
 class LoginView(TokenObtainPairView):
+    permission_classes = [permissions.AllowAny] 
     serializer_class = MyTokenObtainPairSerializer
 
 class LogoutView(APIView):
@@ -639,7 +640,7 @@ class PasswordResetRequestView(APIView):
         from_email = getattr(settings, "DEFAULT_FROM_EMAIL", "no-reply@lifelink.local")
 
         try:
-            send_mail(subject, message, from_email, [user.email], fail_silently=True)
+            send_mail(subject, message, from_email, [user.email], fail_silently=False)
         except Exception:
             pass
 
