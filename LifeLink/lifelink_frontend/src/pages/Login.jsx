@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -32,23 +33,28 @@ export default function Login() {
     const result = await login(formData);
     
     if (result.success) {
+      toast.success('Welcome back! Login successful', {
+        icon: '🩸',
+      });
       navigate('/dashboard');
+    } else {
+      toast.error(result.error || 'Login failed. Please check your credentials.');
     }
     
     setIsLoading(false);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center py-6 sm:py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-6 sm:space-y-8">
         <div className="text-center">
-          <h1 className="text-6xl mb-4">🩸</h1>
-          <h2 className="text-4xl font-bold text-red-600">LifeLink</h2>
-          <p className="mt-2 text-gray-600">Connecting Blood Donors & Recipients</p>
+          <h1 className="text-4xl sm:text-6xl mb-3 sm:mb-4">🩸</h1>
+          <h2 className="text-3xl sm:text-4xl font-bold text-red-600">LifeLink</h2>
+          <p className="mt-2 text-sm sm:text-base text-gray-600">Connecting Blood Donors & Recipients</p>
         </div>
         
-        <div className="bg-white py-8 px-6 shadow-xl rounded-lg">
-          <h3 className="text-2xl font-bold text-center text-gray-900 mb-6">
+        <div className="bg-white py-6 sm:py-8 px-5 sm:px-6 shadow-xl rounded-lg">
+          <h3 className="text-xl sm:text-2xl font-bold text-center text-gray-900 mb-4 sm:mb-6">
             Sign in to your account
           </h3>
           

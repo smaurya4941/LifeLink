@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
 import { notificationAPI } from '../services/api';
 
 export default function RealTimeNotifications() {
@@ -68,17 +69,23 @@ export default function RealTimeNotifications() {
         setNotifications(prev => [data.notification, ...prev]);
         setUnreadCount(prev => prev + 1);
         showBrowserNotification(data.notification);
+        // Also show toast notification
+        showToastNotification(data.notification);
         break;
       case 'unread_count':
         setUnreadCount(data.count);
         break;
       case 'match_update':
-        // Handle match updates
         console.log('Match update:', data.match);
+        toast.success('New match update received!', {
+          icon: '🔔',
+        });
         break;
       case 'request_update':
-        // Handle request updates
         console.log('Request update:', data.request);
+        toast.info('Blood request updated', {
+          icon: '📝',
+        });
         break;
       default:
         console.log('Unknown message type:', data.type);
@@ -93,6 +100,23 @@ export default function RealTimeNotifications() {
         tag: notification.id
       });
     }
+  };
+
+  const showToastNotification = (notification) => {
+    const notificationIcons = {
+      'MATCH_FOUND': '🔗',
+      'REQUEST_ACCEPTED': '✅',
+      'REQUEST_REJECTED': '❌',
+      'DONATION_REMINDER': '⏰',
+      'SYSTEM_UPDATE': '📢',
+      'URGENT_REQUEST': '🚨',
+      'DONATION_COMPLETED': '🎉'
+    };
+
+    toast.success(notification.message, {
+      icon: notificationIcons[notification.type] || '🔔',
+      duration: 5000,
+    });
   };
 
   const requestNotificationPermission = async () => {

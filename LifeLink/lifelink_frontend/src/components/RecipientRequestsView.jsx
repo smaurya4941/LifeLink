@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { bloodRequestAPI } from '../services/api';
 import BloodDonationMap from './BloodDonationMap';
 
@@ -32,6 +33,7 @@ export default function RecipientRequestsView({ onCreateNew }) {
   };
 
   const handleFindMatches = async (requestId) => {
+    const toastId = toast.loading('Finding matches...');
     try {
       const response = await bloodRequestAPI.findMatches(requestId);
       const matchData = response.data.matches || response.data;
@@ -39,21 +41,33 @@ export default function RecipientRequestsView({ onCreateNew }) {
         ...prev,
         [requestId]: matchData,
       }));
+      const count = Array.isArray(matchData) ? matchData.length : 0;
+      toast.success(`Found ${count} potential match${count !== 1 ? 'es' : ''}!`, {
+        id: toastId,
+      });
     } catch (error) {
       console.error('Failed to find matches:', error);
-      alert('Failed to find matches. Check console for details.');
+      toast.error('Failed to find matches. Please try again.', {
+        id: toastId,
+      });
     }
   };
 
   const handleConfirmDonor = async (requestId, donorId) => {
+    const toastId = toast.loading('Confirming donor...');
     try {
       const response = await bloodRequestAPI.confirmDonor(requestId, { donor_id: donorId });
-      alert('Donor confirmed successfully!');
+      toast.success('Donor confirmed successfully! 🩸', {
+        id: toastId,
+        duration: 5000,
+      });
       fetchRequests();
       setMatches((prev) => ({ ...prev, [requestId]: null }));
     } catch (error) {
       console.error('Failed to confirm donor:', error);
-      alert('Failed to confirm donor. Please try again.');
+      toast.error('Failed to confirm donor. Please try again.', {
+        id: toastId,
+      });
     }
   };
 

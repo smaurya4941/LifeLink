@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { matchingAPI } from '../services/api';
 
 export default function DonorMatchesView() {
@@ -29,13 +30,18 @@ export default function DonorMatchesView() {
   };
 
   const handleAcceptMatch = async (matchId) => {
+    const toastId = toast.loading('Accepting match...');
     try {
       await matchingAPI.acceptMatch(matchId);
-      alert('Match accepted! The recipient will be notified.');
+      toast.success('Match accepted! The recipient will be notified. 🩸', {
+        id: toastId,
+      });
       fetchMatches();
     } catch (error) {
       console.error('Failed to accept match:', error);
-      alert('Failed to accept match. Please try again.');
+      toast.error('Failed to accept match. Please try again.', {
+        id: toastId,
+      });
     }
   };
 
@@ -43,12 +49,18 @@ export default function DonorMatchesView() {
     if (!window.confirm('Are you sure you want to reject this match?')) {
       return;
     }
+    const toastId = toast.loading('Rejecting match...');
     try {
       await matchingAPI.rejectMatch(matchId, 'Rejected by donor');
+      toast.success('Match rejected successfully', {
+        id: toastId,
+      });
       fetchMatches();
     } catch (error) {
       console.error('Failed to reject match:', error);
-      alert('Failed to reject match. Please try again.');
+      toast.error('Failed to reject match. Please try again.', {
+        id: toastId,
+      });
     }
   };
 

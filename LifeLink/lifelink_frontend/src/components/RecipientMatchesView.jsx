@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { matchingAPI, bloodRequestAPI } from '../services/api';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { bloodRequestAPI, matchingAPI } from '../services/api';
 
 export default function RecipientMatchesView() {
   const [matches, setMatches] = useState([]);
@@ -29,13 +30,19 @@ export default function RecipientMatchesView() {
   };
 
   const handleConfirmDonor = async (requestId, donorId) => {
+    const toastId = toast.loading('Confirming donor...');
     try {
       await bloodRequestAPI.confirmDonor(requestId, { donor_id: donorId });
-      alert('Donor confirmed successfully! Contact details will be shared.');
+      toast.success('Donor confirmed successfully! Contact details will be shared. 🩸', {
+        id: toastId,
+        duration: 5000,
+      });
       fetchMatches();
     } catch (error) {
       console.error('Failed to confirm donor:', error);
-      alert('Failed to confirm donor. Please try again.');
+      toast.error('Failed to confirm donor. Please try again.', {
+        id: toastId,
+      });
     }
   };
 

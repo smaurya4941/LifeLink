@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { donorAPI } from '../services/api';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
+import { donorAPI } from '../services/api';
 
 export default function DonorProfile() {
   const { user } = useAuth();
@@ -69,17 +70,29 @@ export default function DonorProfile() {
     setSaving(true);
     setError(null);
 
+    const toastId = toast.loading(profile ? 'Updating profile...' : 'Creating profile...');
+
     try {
       if (profile) {
         await donorAPI.updateDonor(profile.id, formData);
+        toast.success('Donor profile updated successfully! ✅', {
+          id: toastId,
+        });
       } else {
         await donorAPI.createDonor(formData);
+        toast.success('Donor profile created successfully! 🩸', {
+          id: toastId,
+        });
       }
       
       await fetchProfile();
       setIsEditing(false);
     } catch (error) {
-      setError('Failed to save profile');
+      const errorMessage = error.response?.data?.message || 'Failed to save profile';
+      toast.error(errorMessage, {
+        id: toastId,
+      });
+      setError(errorMessage);
       console.error('Profile save error:', error);
     } finally {
       setSaving(false);
@@ -90,9 +103,13 @@ export default function DonorProfile() {
 
   const handleUseCurrentLocation = () => {
     if (!navigator.geolocation) {
+      toast.error('Geolocation is not supported by this browser.');
       setError('Geolocation is not supported by this browser.');
       return;
     }
+
+    const toastId = toast.loading('Getting your location...');
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setFormData((prev) => ({
@@ -100,10 +117,17 @@ export default function DonorProfile() {
           latitude: position.coords.latitude.toString(),
           longitude: position.coords.longitude.toString(),
         }));
+        toast.success('Location captured successfully! 📍', {
+          id: toastId,
+        });
       },
       (geoError) => {
         console.error('Unable to capture location', geoError);
-        setError('Unable to capture location automatically.');
+        const errorMessage = 'Unable to capture location automatically.';
+        toast.error(errorMessage, {
+          id: toastId,
+        });
+        setError(errorMessage);
       },
       { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
     );

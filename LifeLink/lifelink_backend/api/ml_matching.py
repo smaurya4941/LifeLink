@@ -326,7 +326,7 @@ class AdvancedMatchingEngine:
         ).filter(
             Q(last_donation_date__lte=date.today() - timedelta(days=90)) | 
             Q(last_donation_date__isnull=True)
-        ).select_related('user')
+        ).select_related('user').prefetch_related('donation_history')
         
         matches = []
         

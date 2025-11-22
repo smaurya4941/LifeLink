@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { matchingAPI } from '../services/api';
 
 export default function MatchesList() {
@@ -30,20 +31,34 @@ export default function MatchesList() {
   };
 
   const handleAcceptMatch = async (matchId) => {
+    const toastId = toast.loading('Accepting match...');
     try {
       await matchingAPI.acceptMatch(matchId);
-      fetchMatches(); // Refresh the list
+      toast.success('Match accepted successfully! 🩸', {
+        id: toastId,
+      });
+      fetchMatches();
     } catch (error) {
       console.error('Failed to accept match:', error);
+      toast.error('Failed to accept match. Please try again.', {
+        id: toastId,
+      });
     }
   };
 
   const handleRejectMatch = async (matchId) => {
+    const toastId = toast.loading('Rejecting match...');
     try {
       await matchingAPI.rejectMatch(matchId, 'Rejected by user');
-      fetchMatches(); // Refresh the list
+      toast.success('Match rejected successfully', {
+        id: toastId,
+      });
+      fetchMatches();
     } catch (error) {
       console.error('Failed to reject match:', error);
+      toast.error('Failed to reject match. Please try again.', {
+        id: toastId,
+      });
     }
   };
 

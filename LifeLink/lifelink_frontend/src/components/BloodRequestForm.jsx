@@ -633,7 +633,8 @@
 
 
 
-import React, { useState } from 'react';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { bloodRequestAPI } from '../services/api';
 
 export default function BloodRequestForm({ onSuccess, onCancel }) {
@@ -678,6 +679,8 @@ export default function BloodRequestForm({ onSuccess, onCancel }) {
     setLoading(true);
     setError(null);
 
+    const toastId = toast.loading('Creating blood request...');
+
     try {
       const response = await bloodRequestAPI.createBloodRequest(formData);
 
@@ -686,10 +689,17 @@ export default function BloodRequestForm({ onSuccess, onCancel }) {
         await bloodRequestAPI.findMatches(response.data.id);
       }
 
+      toast.success('Blood request created successfully! 🩸', {
+        id: toastId,
+      });
       onSuccess?.(response.data);
     } catch (error) {
       console.error('Failed to create blood request:', error);
-      setError('Failed to create blood request. Please try again.');
+      const errorMessage = error.response?.data?.message || 'Failed to create blood request. Please try again.';
+      toast.error(errorMessage, {
+        id: toastId,
+      });
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

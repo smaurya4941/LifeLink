@@ -50,7 +50,7 @@ export default function BloodDonationMap() {
 
   useLayoutEffect(() => {
     if (!loading && containerRef.current && !mapRef.current) {
-      console.log("✅ Map init after loading");
+      // console.log("✅ Map init after loading");
       const instance = L.map(containerRef.current).setView([defaultCenter.lat, defaultCenter.lng], zoom);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
@@ -244,7 +244,7 @@ export default function BloodDonationMap() {
     const donorLayer = L.layerGroup();
     const requestLayer = L.layerGroup();
     
-    console.log('Show Donors:', showDonors);
+    // console.log('Show Donors:', showDonors);
     if (showDonors) {
       filteredDonors.forEach((donor) => {
         // console.log('Adding marker for donor:', donor); // Log each donor being added

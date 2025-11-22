@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { bloodRequestAPI, matchingAPI } from '../services/api';
 import BloodDonationMap from './BloodDonationMap';
 
@@ -45,30 +46,41 @@ export default function DonorRequestsView() {
 
   const handleAcceptMatch = async (matchId) => {
     if (!matchId) {
-      alert('No valid match ID found!');
+      toast.error('No valid match ID found!');
       return;
     }
   
-    console.log("🩸 Accepting match with ID:", matchId); // debug
+    console.log("🩸 Accepting match with ID:", matchId);
+    const toastId = toast.loading('Accepting match...');
     try {
       await matchingAPI.acceptMatch(matchId);
-      alert('✅ Match accepted! The recipient will be notified.');
+      toast.success('✅ Match accepted! The recipient will be notified.', {
+        id: toastId,
+      });
       fetchRequests();
       setSelectedRequest(null);
     } catch (error) {
       console.error('❌ Failed to accept match:', error);
-      alert('Failed to accept match. Please try again.');
+      toast.error('Failed to accept match. Please try again.', {
+        id: toastId,
+      });
     }
   };
   
   const handleFindMatches = async (requestId) => {
+    const toastId = toast.loading('Finding matches...');
     try {
       const response = await bloodRequestAPI.findMatches(requestId);
       const matches = response.data.matches || [];
       setSelectedRequest({ id: requestId, matches });
+      toast.success(`Found ${matches.length} potential match${matches.length !== 1 ? 'es' : ''}!`, {
+        id: toastId,
+      });
     } catch (error) {
       console.error('Failed to find matches:', error);
-      alert('Failed to find matches. Check console for details.');
+      toast.error('Failed to find matches. Please try again.', {
+        id: toastId,
+      });
     }
   };
 

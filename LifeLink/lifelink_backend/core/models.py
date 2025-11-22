@@ -41,13 +41,13 @@ class User(AbstractUser):
 # Donor profile model
 class Donor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='donor_profile')
-    blood_group = models.CharField(max_length=5, choices=BLOOD_GROUP_CHOICES, default='O+')
+    blood_group = models.CharField(max_length=5, choices=BLOOD_GROUP_CHOICES, default='O+', db_index=True)
     address = models.CharField(max_length=200, default='')
-    city = models.CharField(max_length=100, default='')
-    state = models.CharField(max_length=100, default='')
+    city = models.CharField(max_length=100, default='', db_index=True)
+    state = models.CharField(max_length=100, default='', db_index=True)
     pincode = models.CharField(max_length=10, default='')
-    availability = models.BooleanField(default=True)
-    last_donation_date = models.DateField(null=True, blank=True)
+    availability = models.BooleanField(default=True, db_index=True)
+    last_donation_date = models.DateField(null=True, blank=True, db_index=True)
     weight = models.FloatField(validators=[MinValueValidator(45.0), MaxValueValidator(200.0)], null=True, blank=True)
     height = models.FloatField(validators=[MinValueValidator(120.0), MaxValueValidator(220.0)], null=True, blank=True)
     medical_conditions = models.TextField(blank=True, null=True)
@@ -57,7 +57,7 @@ class Donor(models.Model):
     
     # ML features for matching
     matching_score = models.FloatField(default=0.0)
-    is_verified = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False, db_index=True)
     
     def __str__(self):
         return f'{self.user.username} - {self.blood_group}'
